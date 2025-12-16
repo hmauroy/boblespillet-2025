@@ -23,12 +23,16 @@ class Boble(Ring):
         Hvis kollisjon med hindring skal boblen sprekke.
         Hva slags objekt det kollideres mot må sjekkes før kollisjon. Hvis hindring må hindring.kollisjon() benyttes.
         """
-        if not self == objekt2:
+        # Tilfeldig tall 1% om det skal sjekkes for kollisjon.
+        testKollisjon = randint(1,100) == 42
+        if self.type == "helt":
+            testKollisjon = True
+        if not self == objekt2 and testKollisjon == True:
             # Sjekk avstand mellom senter av boblene.
             dx = self.x - objekt2.x
             dy = self.y - objekt2.y
             d = math.sqrt(dx**2 + dy**2)
-            if d <= self.R + objekt2.R and randint(1,100) == 42:
+            if d <= self.R + objekt2.R:
                 # Kollisjon.
                 #print(f"kollisjon: {self.x},{self.y}")
                 self.merge = True

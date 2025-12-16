@@ -5,6 +5,7 @@ from ring import Ring
 from boble import Boble
 from helt import Helt
 from hindring import Hindring
+from hjelpefunksjoner import processKeypress, processKeyRelease, showEndScreen
 
 window = tk.Tk()
 window.lift()
@@ -114,12 +115,19 @@ bobler = []
 teller = 0
 R_MIN = 5
 R_MAX = 20
-N_max = 50
+N_max = 5
 for i in range(N_max):
     bobler.append(Boble(randint(R_MIN,R_MAX),x=randint(xmin,xmax),y=randint(ymin,ymax),fart=5,id=teller))
     teller += 1
 
+helt = Helt(20,200,200,"helten")
+helt.outline = "chartreuse"
+helt.tegn()
 
+# Setter opp piltaster til å starte tastetrykk-funksjonen.
+# Legger også ved variablene evt og helt-objektet.
+window.bind("<KeyPress>", lambda evt: processKeypress(evt,helt))
+window.bind("<KeyRelease>", lambda evt: processKeyRelease(evt,helt))
 
 
 isRunning = True
@@ -134,6 +142,8 @@ while isRunning:
         for boble in bobler:
             boble.oppdater()
             boble.tegn()
+        helt.oppdater()
+        helt.tegn()
         # Slett bobler utenfor skjermen. Går baklengs pga. skal poppe så indekser ikke forskyves.
         for i in range(len(bobler)-1,-1,-1):
             boble = bobler[i]
@@ -154,6 +164,13 @@ while isRunning:
                         # Sjekker kollisjon som setter merge-flagget på begge boblene.
                         # Og levende = False for den minste.
                         boble.kollisjon(boble2)
+        # Sjekk for kollisjon mellom helten og andre bobler.
+        for boble in bobler:
+            helt.kollisjon(boble)
+        if not helt.levende:
+            isRunning = False
+            showEndScreen()
+        
         # Slett alle bobler markert ikke levende.
         for j in range(len(bobler)-1,-1,-1):
             boble = bobler[j]
