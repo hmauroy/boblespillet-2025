@@ -2,6 +2,9 @@ import tkinter as tk
 import time
 from random import randint, random, uniform
 from ring import Ring
+from boble import Boble
+from helt import Helt
+from hindring import Hindring
 
 window = tk.Tk()
 window.lift()
@@ -111,6 +114,12 @@ bobler = []
 teller = 0
 R_MIN = 5
 R_MAX = 20
+N_max = 50
+for i in range(N_max):
+    bobler.append(Boble(randint(R_MIN,R_MAX),x=randint(xmin,xmax),y=randint(ymin,ymax),fart=5,id=teller))
+    teller += 1
+
+
 
 
 isRunning = True
@@ -121,6 +130,36 @@ dt = 1/30
 
 while isRunning:
     if time.time() - lastTime >= dt:
+        canvas.delete("ring")
+        for boble in bobler:
+            boble.oppdater()
+            boble.tegn()
+        # Slett bobler utenfor skjermen. Går baklengs pga. skal poppe så indekser ikke forskyves.
+        for i in range(len(bobler)-1,-1,-1):
+            boble = bobler[i]
+            if not boble.levende:
+                bobler.pop(i)
+        # Lag nye bobler jevnlig for å fylle på for de som ble slettet.
+        while len(bobler) < N_max:
+            bobler.append(Boble(randint(R_MIN,R_MAX),x=randint(xmin,xmax),y=randint(ymax+R_MAX,ymax+2*R_MAX),fart=2,id=teller))
+            teller += 1
+        # Sjekk kollisjoner mellom boblene. 
+        # Tar hver boble og sjekker for kollisjon med alle andre.
+        for boble in bobler:
+            # Hopp over bobler som allerede er valgt å slås sammen med en annen.
+            if boble.merge == False and boble.y < 0.8*hoyde-boble.R:
+                for boble2 in bobler:
+                    #boble.kollisjon(boble2)
+                    if boble2.merge == False:
+                        # Sjekker kollisjon som setter merge-flagget på begge boblene.
+                        # Og levende = False for den minste.
+                        boble.kollisjon(boble2)
+        # Slett alle bobler markert ikke levende.
+        for j in range(len(bobler)-1,-1,-1):
+            boble = bobler[j]
+            # Slett bobler med levende == False
+            if not boble.levende:
+                bobler.pop(j)
 
         lastTime = time.time()
     window.update()
