@@ -115,19 +115,18 @@ Ring.canvas = canvas
 bobler = []
 teller = 0
 R_MIN = 5
-R_MAX = 20
+R_MAX = 40
 N_max = 5
+N_FIENDE_MAX = 5
+fiende_teller = 0
+
 for i in range(N_max):
-    bobler.append(Boble(randint(R_MIN,R_MAX),x=randint(xmin,xmax),y=randint(ymin,ymax),fart=5,id=teller))
+    bobler.append(Boble(randint(R_MIN,R_MAX),x=randint(xmin,xmax),y=ymax,fart=5,id=teller))
     teller += 1
 
-helt = Helt(20,200,200,"helten")
+helt = Helt(R_MAX/2,200,200,"helten")
 helt.outline = "chartreuse"
 helt.tegn()
-
-fiende = Fiende(40,400,400,"fiende1")
-fiende.outline = "red"
-bobler.append(fiende)
 
 # Setter opp piltaster til å starte tastetrykk-funksjonen.
 # Legger også ved variablene evt og helt-objektet.
@@ -153,11 +152,24 @@ while isRunning:
         for i in range(len(bobler)-1,-1,-1):
             boble = bobler[i]
             if not boble.levende:
+                if boble.type == "fiende":
+                    fiende_teller -= 1
+                    print(f"Fiende med id {boble.id} slettet.")
                 bobler.pop(i)
         # Lag nye bobler jevnlig for å fylle på for de som ble slettet.
         while len(bobler) < N_max:
-            bobler.append(Boble(randint(R_MIN,R_MAX),x=randint(xmin,xmax),y=randint(ymax+R_MAX,ymax+2*R_MAX),fart=2,id=teller))
+            ny_boble = Boble(randint(R_MIN,R_MAX),x=randint(xmin,xmax),y=randint(ymax+R_MAX,ymax+2*R_MAX),fart=2,id=teller)
+            # Noen bobler er virkelig svære!
+            if randint(1,5) == 1:
+                ny_boble.R = R_MAX*3
+            bobler.append(ny_boble)
             teller += 1
+        # Lager nye fiender opptil N_FIENDE_MAX
+        while fiende_teller < N_FIENDE_MAX:
+            r = randint(R_MAX,R_MAX*3)
+            ny_fiende = Fiende(r,x=randint(xmin,xmax),y=randint(ymax+r,ymax+2*r))
+            bobler.append(ny_fiende)
+            fiende_teller += 1
         # Sjekk kollisjoner mellom boblene. 
         # Tar hver boble og sjekker for kollisjon med alle andre.
         for boble in bobler:

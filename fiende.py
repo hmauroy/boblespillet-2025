@@ -8,9 +8,11 @@ class Fiende(Boble):
     Driver rundt med tilfeldig fart i 
     en retning i 2-3 sekunder. Så endres farten.
     """
-    def __init__(self, r, x, y, id):
-        super().__init__(r, x, y, 0, id)
+    id_teller = 1
+    def __init__(self, r, x, y):
+        super().__init__(r, x, y, 0, Fiende.id_teller)
         self.type = "fiende"
+        self.outline = "red"
         self.frameTeller = 0
     
     def oppdater_helper(self):
