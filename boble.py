@@ -60,14 +60,17 @@ class Boble(Ring):
             else:
                 self.merge = False
 
-
     def oppdater(self):
+        # Reseter merge flagget
+        self.merge = False
+        """Wrapper-funksjon som gjør ulike oppgaver."""
+        self.oppdater_helper()
+
+    def oppdater_helper(self):
         "Oppdater fart, posisjon, sjekk kollisjon, tegn"
         self.y -= self.dy
         if self.y + self.R < 0:
             self.levende = False
-        # Reseter merge flagget
-        self.merge = False
 
     def ny_radius(self,objekt2):
         areal = self.areal() + objekt2.areal()

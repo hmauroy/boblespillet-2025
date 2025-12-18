@@ -4,6 +4,7 @@ from random import randint, random, uniform
 from ring import Ring
 from boble import Boble
 from helt import Helt
+from fiende import Fiende
 from hindring import Hindring
 from hjelpefunksjoner import processKeypress, processKeyRelease, showEndScreen
 
@@ -123,6 +124,10 @@ for i in range(N_max):
 helt = Helt(20,200,200,"helten")
 helt.outline = "chartreuse"
 helt.tegn()
+
+fiende = Fiende(40,400,400,"fiende1")
+fiende.outline = "red"
+bobler.append(fiende)
 
 # Setter opp piltaster til å starte tastetrykk-funksjonen.
 # Legger også ved variablene evt og helt-objektet.

@@ -13,7 +13,7 @@ class Helt(Boble):
         self.dx = dx * 100/self.R
         self.dy = dy * 100/self.R
 
-    def oppdater(self):
+    def oppdater_helper(self):
         """Override av Boble.oppdater()."""
         self.x += self.dx
         self.y += self.dy
