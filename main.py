@@ -113,12 +113,12 @@ ymax = canvas_height
 Ring.canvas = canvas
 
 bobler = []
+fiender = []
 teller = 0
 R_MIN = 5
 R_MAX = 40
 N_max = 5
 N_FIENDE_MAX = 5
-fiende_teller = 0
 
 for i in range(N_max):
     bobler.append(Boble(randint(R_MIN,R_MAX),x=randint(xmin,xmax),y=ymax,fart=5,id=teller))
@@ -146,6 +146,9 @@ while isRunning:
         for boble in bobler:
             boble.oppdater()
             boble.tegn()
+        for fiende in fiender:
+            fiende.oppdater()
+            fiende.tegn()
         helt.oppdater()
         helt.tegn()
         # Slett bobler utenfor skjermen. Går baklengs pga. skal poppe så indekser ikke forskyves.
@@ -165,11 +168,10 @@ while isRunning:
             bobler.append(ny_boble)
             teller += 1
         # Lager nye fiender opptil N_FIENDE_MAX
-        while fiende_teller < N_FIENDE_MAX:
+        while len(fiender) < N_FIENDE_MAX:
             r = randint(R_MAX,R_MAX*3)
             ny_fiende = Fiende(r,x=randint(xmin,xmax),y=randint(ymax+r,ymax+2*r))
-            bobler.append(ny_fiende)
-            fiende_teller += 1
+            fiender.append(ny_fiende)
         # Sjekk kollisjoner mellom boblene. 
         # Tar hver boble og sjekker for kollisjon med alle andre.
         for boble in bobler:
@@ -184,6 +186,8 @@ while isRunning:
         # Sjekk for kollisjon mellom helten og andre bobler.
         for boble in bobler:
             helt.kollisjon(boble)
+        for fiende in fiender:
+            helt.kollisjon(fiende)
         if not helt.levende:
             isRunning = False
             showEndScreen()
